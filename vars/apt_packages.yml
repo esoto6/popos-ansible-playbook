@@ -1,0 +1,19 @@
+apt_repositories:
+
+apt_packages:
+  essentials:
+  - git
+  - curl
+  - unzip
+  - ca-certificates
+  - gnupg
+  development:
+  - make
+  - gcc
+  - build-essential
+  utilities:
+  - fzf
+  - btop
+  - build-essential
+  - plocate
+  - ripgrep

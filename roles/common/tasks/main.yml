@@ -1,0 +1,36 @@
+---
+- name: Load apt package variables
+  ansible.builtin.include_vars:
+    file: vars/apt_packages.yml
+
+- name: Load bash alias variables
+  ansible.builtin.include_vars:
+    file: vars/bash_aliases.yml
+
+- name: Apt Packages
+  import_tasks: tasks/apt.yml
+  when: install.apt_packages
+  tags:
+  - common
+  - apt
+
+- name: Configure Aliases
+  import_tasks: tasks/aliases.yml
+  when: install.aliases
+  tags:
+  - common
+  - aliases
+
+- name: Install Bitwarden
+  import_tasks: tasks/bitwarden.yml
+  when: install.bitwarden
+  tags:
+  - common
+  - bitwarden
+
+- name: Install Google Chrome
+  import_tasks: tasks/chrome.yml
+  when: install.chrome
+  tags:
+  - common
+  - chrome

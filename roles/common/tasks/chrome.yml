@@ -1,0 +1,6 @@
+---
+- name: Install Chrome
+  command: flatpak install --user --noninteractive com.google.Chrome
+  when: install.chrome
+  tags:
+  - chrome

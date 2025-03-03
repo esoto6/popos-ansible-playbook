@@ -1,0 +1,34 @@
+---
+- name: main
+  hosts: localhost
+  connection: local
+  become: false
+
+  vars_files:
+  - config.yml
+  - vars/apt_packages.yml
+  - vars/bash_aliases.yml
+  - vars/vscode_extensions.yml
+
+  tasks:
+  - name: Print Welcome Message
+    ansible.builtin.debug:
+      msg: "Starting Setup...."
+
+  roles:
+  - role: common
+    vars_files:
+    - vars/apt-packages.yml
+    - vars/bash-aliases.yml
+    tags:
+    - common
+
+  - role: programming_languages
+    tags:
+    - programming_languages
+
+  - role: dev_tools
+    vars_files:
+    - vars/vscode_extensions.yml
+    tags:
+    - dev_tools

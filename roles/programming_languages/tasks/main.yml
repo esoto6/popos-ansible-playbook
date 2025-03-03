@@ -1,0 +1,15 @@
+- name: Install Python
+  import_tasks: python.yml
+  when: install.python
+
+- name: Install Npm
+  import_tasks: npm.yml
+  when: install.npm
+
+- name: Install Java 21
+  import_tasks: java.yml
+  when: install.java
+
+- name: Install Go
+  import_tasks: go.yml
+  when: install.go

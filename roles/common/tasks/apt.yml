@@ -1,0 +1,44 @@
+---
+- name: Install apt repositories.
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: true
+  loop: "{{ apt_repositories | default([]) }}"
+  when:
+  - apt_repositories | length > 0
+  tags:
+  - apt
+
+- name: Update APT cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+  changed_when: false
+  when: apt_packages is defined
+  tags:
+  - apt
+
+- name: Install apt packages.
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    autoclean: true
+    autoremove: true
+    update_cache: true
+    state: latest
+  loop: "{{ apt_packages.values() | list | flatten }}"
+  register: install_result
+  when: apt_packages is defined
+  tags:
+  - apt
+
+- name: Clean apt cache.
+  become: true
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
+  when: apt_packages | length > 0 and not install_result.skipped
+  tags:
+  - apt

@@ -1,0 +1,49 @@
+- name: Download GitHub CLI GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    mode: '0644'
+
+- name: Add GitHub CLI repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
+    filename: github-cli
+    state: present
+
+- name: Update APT cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install GitHub CLI
+  become: true
+  ansible.builtin.apt:
+    name: gh
+    state: present
+
+- name: Check if GitHub CLI is authenticated
+  ansible.builtin.command:
+    cmd: gh auth status
+  register: gh_auth_check
+  failed_when: false
+  changed_when: false
+
+- name: Debug GitHub CLI authentication status (Raw Output)
+  ansible.builtin.debug:
+    msg: "{{ gh_auth_check.stdout_lines }}"
+
+- name: Set authentication check result
+  ansible.builtin.set_fact:
+    github_authenticated: "{{ gh_auth_check.stdout is search('Logged in to github.com') }}"
+
+- name: Prompt user to manually authenticate GitHub CLI
+  ansible.builtin.debug:
+    msg: "GitHub CLI is not authenticated. Run 'gh auth login' manually, then re-run this playbook."
+  when: not github_authenticated
+
+- name: Fail if not authenticated
+  ansible.builtin.fail:
+    msg: "GitHub CLI is not authenticated. Run 'gh auth login' manually, then re-run this playbook."
+  when: not github_authenticated

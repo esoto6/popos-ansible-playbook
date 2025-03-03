@@ -1,0 +1,24 @@
+# Set Hostname
+custom_hostname: pop-os-dx
+
+vars_files:
+- vars/apt_packages.yml
+- vars/bash_aliases.yml
+- vars/vscode_extensions.yml
+
+install:
+  apt_packages: true
+  vscode: true
+  bitwarden: true
+  obsidian: true
+  neovim: true
+  docker: true
+  insomnia: true
+  aliases: true
+  github: true
+  chrome: true
+  lazydocker: true
+  python: true
+  java: true
+  npm: true
+  go: true

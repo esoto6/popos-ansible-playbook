@@ -1,0 +1,66 @@
+- name: Check if Go is installed
+  ansible.builtin.stat:
+    path: /usr/local/go/bin/go
+  register: go_stat
+  tags:
+  - programming_languages
+  - go
+
+- name: Download Go tarball
+  become: true
+  ansible.builtin.get_url:
+    url: "https://go.dev/dl/go1.24.0.linux-amd64.tar.gz"
+    dest: "/tmp/go.tar.gz"
+    mode: '0644'
+  when: not go_stat.stat.exists
+  tags:
+  - programming_languages
+  - go
+
+- name: Remove existing Go installation
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/go
+    state: absent
+  when: not go_stat.stat.exists
+  tags:
+  - programming_languages
+  - go
+
+- name: Extract Go to /usr/local
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/go.tar.gz"
+    dest: "/usr/local"
+    remote_src: yes
+  when: not go_stat.stat.exists
+  tags:
+  - programming_languages
+  - go
+
+- name: Ensure Go environment variables are set in ~/.profile
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_env.HOME }}/.profile"
+    block: |
+      # Go environment variables
+      export PATH=$PATH:/usr/local/go/bin
+      export GOPATH=$HOME/go
+
+      # Ensure Go modules are included in PATH
+      if [ -x "$(command -v go)" ] && [ -d "$(go env GOPATH)/bin" ]; then
+          PATH="$(go env GOPATH)/bin:$PATH"
+      fi
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - Go"
+  register: go_env
+  tags:
+  - programming_languages
+  - go
+
+- name: Reload profile if Go env changed
+  ansible.builtin.shell: source ~/.profile
+  args:
+    executable: /bin/bash
+  when: go_env.changed
+  tags:
+  - programming_languages
+  - go

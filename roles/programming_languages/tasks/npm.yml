@@ -1,0 +1,22 @@
+- name: Install Node.js and npm
+  become: true
+  ansible.builtin.apt:
+    name:
+    - nodejs
+    - npm
+    state: present
+    update_cache: true
+  tags:
+  - programming_languages
+  - node
+
+- name: Ensure Node.js version is latest
+  become: true
+  ansible.builtin.shell: |
+    npm install -g n
+    n stable
+  args:
+    executable: /bin/bash
+  tags:
+  - programming_languages
+  - node

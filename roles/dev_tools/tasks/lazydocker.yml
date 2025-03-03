@@ -1,0 +1,16 @@
+- name: Ensure Go is installed before installing Lazydocker
+  ansible.builtin.command: /usr/local/go/bin/go version
+  register: go_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Install Go if not found
+  include_tasks: ../../programming_languages/go.yml
+  when: go_check.rc != 0
+
+- name: Install Lazydocker
+  ansible.builtin.shell: |
+    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+  args:
+    executable: /bin/bash
+  tags: lazydocker

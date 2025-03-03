@@ -1,0 +1,6 @@
+---
+- name: Install Insomnia
+  command: flatpak install --noninteractive rest.insomnia.Insomnia
+  when: install.insomnia
+  tags:
+  - insomnia

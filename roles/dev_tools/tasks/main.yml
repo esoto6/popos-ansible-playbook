@@ -1,0 +1,41 @@
+- name: Install Github CLI
+  import_tasks: tasks/github.yml
+  when: install.github
+  tags:
+  - github
+
+- name: Install VSCode
+  import_tasks: tasks/vscode.yml
+  when: install.vscode
+  tags:
+  - vscode
+
+- name: Install Insomnia
+  import_tasks: tasks/insomnia.yml
+  when: install.insomnia
+  tags:
+  - insomnia
+
+- name: Install Docker
+  import_tasks: tasks/docker.yml
+  when: install.docker
+  tags:
+  - docker
+
+- name: Install Obsidian
+  import_tasks: tasks/obsidian.yml
+  when: install.obsidian
+  tags:
+  - obsidian
+
+- name: Install Neovim
+  import_tasks: tasks/neovim.yml
+  when: install.neovim
+  tags:
+  - neovim
+
+- name: Install lazydocker (Requires Go)
+  import_tasks: tasks/lazydocker.yml
+  when: install.lazydocker
+  tags:
+  - lazydocker

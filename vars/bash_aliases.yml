@@ -1,0 +1,14 @@
+bash_aliases:
+  general:
+    ll: "ls -lah"
+    vim: "nvim"
+  git:
+    gs: "git status"
+    ga: "git add ."
+    gc: "git commit -m"
+    gp: "git push"
+    gl: "git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+    ghist: "git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+  docker:
+    dc: "docker compose"
+    lzd: "lazydocker"

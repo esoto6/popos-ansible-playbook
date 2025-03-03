@@ -1,0 +1,68 @@
+---
+- name: Import Microsoft GPG key
+  ansible.builtin.shell: |
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+  args:
+    executable: /bin/bash
+  become: true
+  tags:
+    - vscode
+
+- name: Add VS Code repository
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/vscode.list
+    line: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/trusted.gpg.d/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    create: true
+  become: true
+  tags:
+    - vscode
+
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+  tags:
+    - vscode
+
+- name: Install VS Code
+  ansible.builtin.apt:
+    name: code
+    state: present
+  become: true
+  tags:
+    - vscode
+
+- name: Verify VS Code installation
+  ansible.builtin.command: which code
+  register: vscode_check
+  changed_when: false
+  tags:
+    - vscode
+
+- name: Ensure VS Code is recognized
+  ansible.builtin.debug:
+    msg: "VS Code installed at {{ vscode_check.stdout }}"
+  tags:
+    - vscode
+
+- name: Install VS Code extensions
+  become: false
+  ansible.builtin.command: "code --install-extension {{ item }} --force"
+  loop: "{{ vscode_extensions.values() | list | flatten }}"
+  register: vscode_extension_install
+  changed_when: "'already installed' not in vscode_extension_install.stdout"
+  tags:
+  - vscode
+
+- name: Show installed extensions
+  ansible.builtin.command: "code --list-extensions"
+  register: vscode_installed_extensions
+  changed_when: false
+  tags:
+  - vscode
+
+- name: Display installed extensions
+  ansible.builtin.debug:
+    msg: "Installed extensions: {{ vscode_installed_extensions.stdout_lines }}"
+  tags:
+  - vscode
