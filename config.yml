@@ -22,3 +22,4 @@ install:
   java: true
   npm: true
   go: true
+  fonts: true

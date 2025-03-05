@@ -1,0 +1,30 @@
+- name: Create Nerd Fonts directory
+  become: true
+  ansible.builtin.file:
+    path: /usr/share/fonts/nerd-fonts
+    state: directory
+    mode: '0755'
+
+- name: Download and Install JetBrainsMono Nerd Font
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.tar.xz"
+    dest: "/tmp/JetBrainsMono.zip"
+
+- name: Extract Nerd Font
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/JetBrainsMono.zip"
+    dest: "/usr/share/fonts/nerd-fonts/"
+    remote_src: yes
+    extra_opts:
+    - "--strip-components=1"
+
+- name: Refresh Font Cache
+  become: true
+  ansible.builtin.command: fc-cache -fv
+
+- name: Set system-wide font
+  ansible.builtin.command:
+    cmd: gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font'
+  become: true

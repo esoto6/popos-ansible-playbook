@@ -34,3 +34,10 @@
   tags:
   - common
   - chrome
+
+- name: Install Fonts
+  import_tasks: tasks/fonts.yml
+  when: install.fonts
+  tags:
+  - common
+  - fonts
