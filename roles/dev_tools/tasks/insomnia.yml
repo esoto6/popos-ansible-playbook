@@ -1,6 +1,6 @@
 ---
 - name: Install Insomnia
-  command: flatpak install --user --noninteractive rest.insomnia.Insomnia
+  ansible.builtin.command: flatpak install --user --noninteractive rest.insomnia.Insomnia
   when: install.insomnia
   tags:
-  - insomnia
+    - insomnia

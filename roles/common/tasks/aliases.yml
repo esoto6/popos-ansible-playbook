@@ -1,10 +1,19 @@
+---
 - name: Ensure .bash_aliases exists
   ansible.builtin.file:
     path: ~/.bash_aliases
     state: touch
-    mode: '0644'
+    mode: "0644"
   tags:
-  - aliases
+    - aliases
+
+- name: Comment out predefined aliases in .bashrc
+  ansible.builtin.replace:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: "^(alias (ls|dir|vdir|ll|la|l)=.*)$"
+    replace: "# \\1"
+  tags:
+    - aliases
 
 - name: Set up Bash aliases
   ansible.builtin.lineinfile:
@@ -12,10 +21,10 @@
     line: 'alias {{ item.key }}="{{ item.value }}"'
     create: true
     state: present
-    regexp: '^alias {{ item.key }}='
+    regexp: "^alias {{ item.key }}="
   loop: "{{ bash_aliases.general | dict2items + bash_aliases.git | dict2items + bash_aliases.docker | dict2items }}"
   tags:
-  - aliases
+    - aliases
 
 - name: Ensure .bash_aliases is sourced in .bashrc
   ansible.builtin.lineinfile:
@@ -25,7 +34,7 @@
     insertafter: EOF
     state: present
   tags:
-  - aliases
+    - aliases
 
 - name: Reload shell to apply changes
   ansible.builtin.shell: source ~/.bashrc
@@ -33,4 +42,4 @@
     executable: /bin/bash
   when: bash_aliases is changed
   tags:
-  - aliases
+    - aliases

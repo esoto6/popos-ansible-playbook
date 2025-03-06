@@ -1,0 +1,33 @@
+---
+- name: Download the GPG key and store it
+  ansible.builtin.shell: |
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/gierens.gpg > /dev/null
+  args:
+    executable: /bin/bash
+  become: true
+  tags:
+    - eza
+
+- name: Add Gierens repository
+  ansible.builtin.lineinfile:
+    path: /etc/apt/sources.list.d/gierens.list
+    line: "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main"
+    create: true
+  become: true
+  tags:
+    - eza
+
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+  tags:
+    - eza
+
+- name: Install eza
+  ansible.builtin.apt:
+    name: eza
+    state: present
+  become: true
+  tags:
+    - eza

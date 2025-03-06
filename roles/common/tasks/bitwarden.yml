@@ -1,6 +1,6 @@
 ---
 - name: Install Bitwarden
-  command: flatpak install --noninteractive com.bitwarden.desktop
+  ansible.builtin.command: flatpak install --noninteractive com.bitwarden.desktop
   when: install.bitwarden
   tags:
-  - bitwarden
+    - bitwarden

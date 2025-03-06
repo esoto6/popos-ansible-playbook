@@ -7,9 +7,9 @@
     update_cache: true
   loop: "{{ apt_repositories | default([]) }}"
   when:
-  - apt_repositories | length > 0
+    - apt_repositories | length > 0
   tags:
-  - apt
+    - apt
 
 - name: Update APT cache
   become: true
@@ -18,7 +18,7 @@
   changed_when: false
   when: apt_packages is defined
   tags:
-  - apt
+    - apt
 
 - name: Install apt packages.
   become: true
@@ -32,7 +32,7 @@
   register: install_result
   when: apt_packages is defined
   tags:
-  - apt
+    - apt
 
 - name: Clean apt cache.
   become: true
@@ -41,4 +41,4 @@
     autoremove: true
   when: apt_packages | length > 0 and not install_result.skipped
   tags:
-  - apt
+    - apt

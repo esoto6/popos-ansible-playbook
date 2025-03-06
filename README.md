@@ -78,11 +78,6 @@ ansible-playbook main.yml --tags programming_languages --skip-tags java
 ```sh
 ✗ tree
 .
-├── ansible.cfg
-├── config.yml                   # Main config file playbook
-├── inventory.cfg
-├── main.yml                     # Main Playbook
-├── README.md
 ├── roles
 │   ├── common                   # Tags: ['common']
 │   │   └── tasks
@@ -95,6 +90,7 @@ ansible-playbook main.yml --tags programming_languages --skip-tags java
 │   ├── dev_tools               # Tags: ['dev_tools']
 │   │   └── tasks
 │   │       ├── docker.yml          # Tags: ['docker']
+│   │       ├── eza.yml             # Tags: ['eza']
 │   │       ├── github.yml          # Tags: ['github']
 │   │       ├── insomnia.yml        # Tags: ['insomnia']
 │   │       ├── lazydocker.yml      # Tags: ['lazydocker']
@@ -111,8 +107,14 @@ ansible-playbook main.yml --tags programming_languages --skip-tags java
 │           ├── npm.yml             # Tags: ['npm']
 │           └── python.yml          # Tags: ['python']
 └── vars
-    ├── apt_packages.yml       # Packages to be installed with 'apt'
-    ├── bash_aliases.yml       # Aliases to add to .bash_aliases
-    ├── starship_vars.yml      # Configuration file for Starship
-    └── vscode_extensions.yml  # VSCode Extensions to install
+│    ├── apt_packages.yml       # Packages to be installed with 'apt'
+│    ├── bash_aliases.yml       # Aliases to add to .bash_aliases
+│    ├── starship_vars.yml      # Configuration file for Starship
+│    └── vscode_extensions.yml  # VSCode Extensions to install
+├── ansible.cfg
+├── config.yml                  # Main config file playbook
+├── inventory.cfg
+├── main.yml                    # Main Playbook
+├── README.md
 '''
+

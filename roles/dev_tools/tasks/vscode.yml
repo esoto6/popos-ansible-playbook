@@ -52,17 +52,17 @@
   register: vscode_extension_install
   changed_when: "'already installed' not in vscode_extension_install.stdout"
   tags:
-  - vscode
+    - vscode
 
 - name: Show installed extensions
   ansible.builtin.command: "code --list-extensions"
   register: vscode_installed_extensions
   changed_when: false
   tags:
-  - vscode
+    - vscode
 
 - name: Display installed extensions
   ansible.builtin.debug:
     msg: "Installed extensions: {{ vscode_installed_extensions.stdout_lines }}"
   tags:
-  - vscode
+    - vscode

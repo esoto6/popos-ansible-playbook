@@ -1,3 +1,4 @@
+---
 starship_config: |
   add_newline = false
 

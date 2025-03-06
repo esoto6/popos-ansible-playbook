@@ -1,22 +1,21 @@
 ---
-
 - name: Ensure Neovim directory exists in /opt
   ansible.builtin.file:
     path: /opt/nvim
     state: directory
-    mode: '0755'
+    mode: "0755"
   become: true
   tags:
-  - neovim
+    - neovim
 
 - name: Download Neovim AppImage
   ansible.builtin.get_url:
     url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage"
     dest: "/opt/nvim/nvim"
-    mode: '0755'
+    mode: "0755"
   become: true
   tags:
-  - neovim
+    - neovim
 
 - name: Create a symbolic link to /usr/local/bin
   ansible.builtin.file:
@@ -25,7 +24,7 @@
     state: link
   become: true
   tags:
-  - neovim
+    - neovim
 
 - name: Ensure Neovim is in the PATH
   ansible.builtin.lineinfile:
@@ -35,42 +34,42 @@
     insertafter: EOF
     state: present
   tags:
-  - neovim
+    - neovim
 
 - name: Reload shell to apply changes
   ansible.builtin.shell: source ~/.bashrc
   args:
     executable: /bin/bash
   tags:
-  - neovim
+    - neovim
 
 - name: Verify Neovim installation
-  command: /usr/local/bin/nvim --version
+  ansible.builtin.command: /usr/local/bin/nvim --version
   register: neovim_version
   changed_when: false
   tags:
-  - neovim
+    - neovim
 
 - name: Output Neovim version
-  debug:
+  ansible.builtin.debug:
     msg: "Neovim installed successfully: {{ neovim_version.stdout }}"
   tags:
-  - neovim
+    - neovim
 
 - name: Ensure ~/.config/nvim exists
   ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/.config/nvim"
     state: directory
-    mode: '0755'
+    mode: "0755"
   tags:
-  - neovim
+    - neovim
 
 - name: Check if Kickstart is already installed
   ansible.builtin.stat:
     path: "{{ ansible_env.HOME }}/.config/nvim/init.lua"
   register: kickstart_installed
   tags:
-  - neovim
+    - neovim
 
 - name: Download and Install Kickstart
   ansible.builtin.git:
@@ -80,7 +79,7 @@
     force: true
   when: not kickstart_installed.stat.exists
   tags:
-  - neovim
+    - neovim
 
 - name: Launch Terminal and Start Neovim
   ansible.builtin.command: gnome-terminal -- bash -c "nvim; exec bash"
@@ -89,4 +88,4 @@
   changed_when: false
   when: not kickstart_installed.stat.exists
   tags:
-  - neovim
+    - neovim

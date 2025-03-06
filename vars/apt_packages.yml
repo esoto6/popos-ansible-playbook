@@ -1,20 +1,21 @@
+---
 apt_repositories:
-- ppa:neovim-ppa/stable
+  - ppa:neovim-ppa/stable
 apt_packages:
   essentials:
-  - git
-  - curl
-  - unzip
-  - ca-certificates
-  - gnupg
+    - git
+    - curl
+    - unzip
+    - ca-certificates
+    - gnupg
   development:
-  - make
-  - gcc
-  - build-essential
+    - make
+    - gcc
+    - build-essential
   utilities:
-  - fzf
-  - btop
-  - build-essential
-  - plocate
-  - ripgrep
-  - neofetch
+    - fzf
+    - btop
+    - build-essential
+    - plocate
+    - ripgrep
+    - neofetch

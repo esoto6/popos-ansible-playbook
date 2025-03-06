@@ -1,19 +1,20 @@
+---
 - name: Install Java 21
   become: true
   ansible.builtin.apt:
     name:
-    - openjdk-21-jdk
+      - openjdk-21-jdk
     state: present
     update_cache: true
   tags:
-  - programming_languages
-  - java
+    - programming_languages
+    - java
 
 - name: Set JAVA_HOME environment variable
   ansible.builtin.lineinfile:
     path: ~/.bashrc
-    line: 'export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))'
+    line: "export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))"
     create: true
   tags:
-  - programming_languages
-  - java
+    - programming_languages
+    - java

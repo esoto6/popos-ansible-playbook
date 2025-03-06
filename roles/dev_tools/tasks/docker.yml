@@ -1,3 +1,4 @@
+---
 - name: Add Docker GPG key
   become: true
   ansible.builtin.shell: |
@@ -28,8 +29,8 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: latest
-    update_cache: yes
-  tags: 
+    update_cache: true
+  tags:
     - docker
 
 - name: Ensure Docker service is running
@@ -37,7 +38,7 @@
   ansible.builtin.systemd:
     name: docker
     state: started
-    enabled: yes
+    enabled: true
   tags:
     - docker
 
@@ -46,9 +47,9 @@
   ansible.builtin.user:
     name: "{{ ansible_user_id }}"
     groups: docker
-    append: yes
+    append: true
   when: ansible_user_id != 'root'
-  tags: 
+  tags:
     - docker
 
 - name: Verify Docker installation

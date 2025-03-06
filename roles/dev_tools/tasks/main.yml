@@ -1,51 +1,58 @@
+---
 - name: Load apt package variables
   ansible.builtin.include_vars:
     file: vars/starship_config.yml
 
 - name: Install Github CLI
-  import_tasks: tasks/github.yml
+  ansible.builtin.import_tasks: tasks/github.yml
   when: install.github
   tags:
-  - github
+    - github
 
 - name: Install VSCode
-  import_tasks: tasks/vscode.yml
+  ansible.builtin.import_tasks: tasks/vscode.yml
   when: install.vscode
   tags:
-  - vscode
+    - vscode
 
 - name: Install Insomnia
-  import_tasks: tasks/insomnia.yml
+  ansible.builtin.import_tasks: tasks/insomnia.yml
   when: install.insomnia
   tags:
-  - insomnia
+    - insomnia
 
 - name: Install Docker
-  import_tasks: tasks/docker.yml
+  ansible.builtin.import_tasks: tasks/docker.yml
   when: install.docker
   tags:
-  - docker
+    - docker
 
 - name: Install Obsidian
-  import_tasks: tasks/obsidian.yml
+  ansible.builtin.import_tasks: tasks/obsidian.yml
   when: install.obsidian
   tags:
-  - obsidian
+    - obsidian
 
 - name: Install Neovim
-  import_tasks: tasks/neovim.yml
+  ansible.builtin.import_tasks: tasks/neovim.yml
   when: install.neovim
   tags:
-  - neovim
+    - neovim
 
 - name: Install lazydocker (Requires Go)
-  import_tasks: tasks/lazydocker.yml
+  ansible.builtin.import_tasks: tasks/lazydocker.yml
   when: install.lazydocker
   tags:
-  - lazydocker
+    - lazydocker
 
 - name: Install Starship
-  import_tasks: tasks/starship.yml
+  ansible.builtin.import_tasks: tasks/starship.yml
   when: install.starship
   tags:
-  - starship
+    - starship
+
+- name: Install eza
+  ansible.builtin.import_tasks: tasks/eza.yml
+  when: install.eza
+  tags:
+    - eza

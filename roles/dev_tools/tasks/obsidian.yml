@@ -1,6 +1,6 @@
 ---
 - name: Install Obsidian
-  command: flatpak install --user --noninteractive md.obsidian.Obsidian
+  ansible.builtin.command: flatpak install --user --noninteractive md.obsidian.Obsidian
   when: install.obsidian
   tags:
-  - insomnia
+    - insomnia
