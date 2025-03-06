@@ -1,10 +1,12 @@
 ---
 - name: Download the GPG key and store it
   ansible.builtin.shell: |
+    set -o pipefail
     wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/gierens.gpg > /dev/null
   args:
     executable: /bin/bash
   become: true
+  changed_when: "'gierens.gpg' in ansible_facts.files"
   tags:
     - eza
 

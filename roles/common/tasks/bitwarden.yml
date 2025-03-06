@@ -1,6 +1,14 @@
 ---
+- name: Check if Bitwarden is installed
+  ansible.builtin.command: flatpak list --app | grep com.bitwarden.desktop
+  register: bitwarden_installed
+  changed_when: false
+  ignore_errors: true
+  tags:
+    - bitwarden
+
 - name: Install Bitwarden
-  ansible.builtin.command: flatpak install --noninteractive com.bitwarden.desktop
-  when: install.bitwarden
+  ansible.builtin.command: flatpak install --user --noninteractive com.bitwarden.desktop
+  when: install.bitwarden and bitwarden_installed.rc != 0
   tags:
     - bitwarden

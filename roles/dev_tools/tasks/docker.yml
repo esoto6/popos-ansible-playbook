@@ -2,6 +2,7 @@
 - name: Add Docker GPG key
   become: true
   ansible.builtin.shell: |
+    set -o pipefail
     install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | tee /etc/apt/keyrings/docker.asc > /dev/null
     chmod a+r /etc/apt/keyrings/docker.asc

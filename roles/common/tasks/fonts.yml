@@ -24,6 +24,8 @@
 - name: Refresh Font Cache
   become: true
   ansible.builtin.command: fc-cache -fv
+  register: font_cache
+  changed_when: "'Rebuilding font cache' in font_cache.stdout"
 
 - name: Set system-wide font
   ansible.builtin.command:

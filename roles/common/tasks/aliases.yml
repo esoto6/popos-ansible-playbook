@@ -23,6 +23,7 @@
     state: present
     regexp: "^alias {{ item.key }}="
   loop: "{{ bash_aliases.general | dict2items + bash_aliases.git | dict2items + bash_aliases.docker | dict2items }}"
+  register: alias_setup
   tags:
     - aliases
 
@@ -33,6 +34,8 @@
     create: true
     insertafter: EOF
     state: present
+  mode: "0644"
+  register: bashrc_update
   tags:
     - aliases
 
@@ -40,6 +43,6 @@
   ansible.builtin.shell: source ~/.bashrc
   args:
     executable: /bin/bash
-  when: bash_aliases is changed
+  when: alias_setup.changed or bashrc_update.changed
   tags:
     - aliases
