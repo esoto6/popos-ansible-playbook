@@ -1,0 +1,58 @@
+- name: Load apt package variables
+  ansible.builtin.include_vars:
+    file: vars/starship_vars.yml
+
+- name: Download and install Starship
+  ansible.builtin.get_url:
+    url: https://starship.rs/install.sh
+    dest: /tmp/starship_install.sh
+    mode: '0755'
+  tags:
+  - starship
+
+- name: Run Starship installer
+  ansible.builtin.command:
+    cmd: /tmp/starship_install.sh -y
+  become: true
+  tags:
+  - starship
+
+- name: Create Starship config directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/starship"
+    state: directory
+    mode: '0755'
+  tags:
+  - starship
+
+- name: Setup starship configuration
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/starship/starship.toml"
+    content: "{{ starship_config }}"
+    mode: '0644'
+  tags:
+  - starship
+
+- name: Ensure Starship is in shell config
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: 'eval "$(starship init bash)"'
+    create: yes
+  tags:
+  - starship
+
+- name: Ensure Starship is in shell config
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: 'export STARSHIP_CONFIG="{{ ansible_env.HOME}}/.config/starship/starship.toml"'
+    create: yes
+    state: present
+  tags:
+  - starship
+
+- name: Source bashrc
+  ansible.builtin.shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+  tags:
+  - starship

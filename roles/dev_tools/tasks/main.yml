@@ -1,3 +1,7 @@
+- name: Load apt package variables
+  ansible.builtin.include_vars:
+    file: vars/starship_config.yml
+
 - name: Install Github CLI
   import_tasks: tasks/github.yml
   when: install.github
@@ -39,3 +43,9 @@
   when: install.lazydocker
   tags:
   - lazydocker
+
+- name: Install Starship
+  import_tasks: tasks/starship.yml
+  when: install.starship
+  tags:
+  - starship

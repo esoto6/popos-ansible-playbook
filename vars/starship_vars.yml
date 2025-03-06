@@ -1,0 +1,17 @@
+starship_config: |
+  add_newline = false
+
+  command_timeout = 2000
+
+  [character]
+  success_symbol = "[➜](bold green)"
+  error_symbol = "[✗](bold red)"
+
+  [directory]
+  truncation_length = 3
+  truncate_to_repo = false
+  style = "bold blue"
+
+  [git_branch]
+  symbol = "🌱 "
+  style = "bold purple"

@@ -1,15 +1,3 @@
-- name: Configure Git settings
-  become: false
-  ansible.builtin.command: >
-    git config --global {{ item.key }} "{{ item.value }}"
-  loop:
-  - { key: user.name, value: "{{ git_config.user_name }}" }
-  - { key: user.email, value: "{{ git_config.user_email }}" }
-  - { key: core.editor, value: "{{ git_config.editor }}" }
-  tags:
-  - aliases
-  - git
-
 - name: Ensure .bash_aliases exists
   ansible.builtin.file:
     path: ~/.bash_aliases

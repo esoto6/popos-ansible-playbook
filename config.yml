@@ -5,6 +5,7 @@ vars_files:
 - vars/apt_packages.yml
 - vars/bash_aliases.yml
 - vars/vscode_extensions.yml
+- vars/starship_vars.yml
 
 install:
   apt_packages: true
@@ -23,3 +24,4 @@ install:
   npm: true
   go: true
   fonts: true
+  starship: true

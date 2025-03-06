@@ -1,5 +1,5 @@
 apt_repositories:
-
+- ppa:neovim-ppa/stable
 apt_packages:
   essentials:
   - git
@@ -17,3 +17,4 @@ apt_packages:
   - build-essential
   - plocate
   - ripgrep
+  - neofetch
