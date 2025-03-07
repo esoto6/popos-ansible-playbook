@@ -1,0 +1,32 @@
+---
+- name: Download IntelliJ Toolbox
+  ansible.builtin.get_url:
+    url: https://download.jetbrains.com/toolbox/jetbrains-toolbox-2.5.4.38621.tar.gz
+    dest: /tmp/jetbrains-toolbox.tar.gz
+  tags:
+    - intellij
+
+- name: Extract IntelliJ Toolbox
+  ansible.builtin.unarchive:
+    src: /tmp/jetbrains-toolbox.tar.gz
+    dest: /opt/
+    remote_src: true
+    mode: "0755"
+  become: true
+  tags:
+    - intellij
+
+- name: Run IntelliJ Toolbox
+  ansible.builtin.command:
+    cmd: ./jetbrains-toolbox
+  args:
+    chdir: /opt/jetbrains-toolbox-2.5.4.38621
+  tags:
+    - intellij
+
+- name: Clean up the downloaded tarball
+  ansible.builtin.file:
+    path: /tmp/jetbrains-toolbox.tar.gz
+    state: absent
+  tags:
+    - intellij

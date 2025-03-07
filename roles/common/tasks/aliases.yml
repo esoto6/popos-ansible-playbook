@@ -34,7 +34,6 @@
     create: true
     insertafter: EOF
     state: present
-  mode: "0644"
   register: bashrc_update
   tags:
     - aliases

@@ -93,6 +93,7 @@ ansible-playbook main.yml --tags programming_languages --skip-tags java
 │   │       ├── eza.yml             # Tags: ['eza']
 │   │       ├── github.yml          # Tags: ['github']
 │   │       ├── insomnia.yml        # Tags: ['insomnia']
+│   │       ├── intellij.yml        # Tags: ['intellij']
 │   │       ├── lazydocker.yml      # Tags: ['lazydocker']
 │   │       ├── main.yml            
 │   │       ├── neovim.yml          # Tags: ['neovim']

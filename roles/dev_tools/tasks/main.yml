@@ -56,3 +56,9 @@
   when: install.eza
   tags:
     - eza
+
+- name: Install intellij
+  ansible.builtin.import_tasks: tasks/intellij.yml
+  when: install.intellij
+  tags:
+    - intellij

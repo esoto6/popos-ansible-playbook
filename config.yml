@@ -27,3 +27,4 @@ install:
   fonts: true
   starship: true
   eza: true
+  intellij: true
