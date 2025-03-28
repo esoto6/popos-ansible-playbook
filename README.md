@@ -52,10 +52,16 @@ ansible-playbook main.yml --list-tasks
 
 ## Running the playbook
 
+>[!IMPORTANT]
+> Run the tasks github first to prevent auth issues
+>
+```bash
+ansible-playbook main.yml --tags github
+```
 Run the full playbook
 
 ```bash
-ansible-playbook playbook.yml --ask-become-pass
+ansible-playbook main.yml --ask-become-pass
 ```
 
 ### Run / Skip Tags
@@ -63,7 +69,7 @@ Use --tags <tagname> to run specific parts of the playbook. Example:
 
 ### Run Specific Tags
 ```sh
-ansible-playbook main.yml --tags github
+ansible-playbook main.yml --tags docker
 ```
 
 ### Skip Specific Tags
