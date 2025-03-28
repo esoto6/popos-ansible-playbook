@@ -1,40 +1,20 @@
 ---
-- name: Import Microsoft GPG key
-  ansible.builtin.shell: |
-    set -o pipefail
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-  args:
-    executable: /bin/bash
-  become: true
+- name: Check if VSCode is installed
+  ansible.builtin.shell: "flatpak list --app | grep com.visualstudio.code"
+  register: vscode_installed
+  changed_when: false
+  failed_when: vscode_installed.rc > 1
   tags:
     - vscode
 
-- name: Add VS Code repository
-  ansible.builtin.lineinfile:
-    path: /etc/apt/sources.list.d/vscode.list
-    line: "deb [arch={{ ansible_architecture }} signed-by=/etc/apt/trusted.gpg.d/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
-    create: true
-  become: true
-  tags:
-    - vscode
-
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: true
-  become: true
-  tags:
-    - vscode
-
-- name: Install VS Code
-  ansible.builtin.apt:
-    name: code
-    state: present
-  become: true
+- name: Install VSCode
+  ansible.builtin.command: flatpak install --user -y flathub com.visualstudio.code
+  when: (install.vscode | default(true)) and vscode_installed.rc != 0
   tags:
     - vscode
 
 - name: Verify VS Code installation
-  ansible.builtin.command: which code
+  ansible.builtin.command: flatpak run com.visualstudio.code --version
   register: vscode_check
   changed_when: false
   tags:
@@ -46,9 +26,25 @@
   tags:
     - vscode
 
+- name: Create VSCode wrapper script for `code .`
+  ansible.builtin.copy:
+    dest: "/usr/local/bin/code"
+    mode: '0755'
+    content: |
+      #!/bin/bash
+      flatpak run com.visualstudio.code "$@"
+  become: true
+  tags:
+    - vscode
+
+- name: Ensure VSCode has access to home directory
+  ansible.builtin.command: flatpak override --user com.visualstudio.code --filesystem=$HOME
+  changed_when: false
+  tags:
+    - vscode
+
 - name: Install VS Code extensions
-  become: false
-  ansible.builtin.command: "code --install-extension {{ item }} --force"
+  ansible.builtin.command: flatpak run com.visualstudio.code --install-extension {{ item }} --force
   loop: "{{ vscode_extensions.values() | list | flatten }}"
   register: vscode_extension_install
   changed_when: "'already installed' not in vscode_extension_install.stdout"
@@ -56,7 +52,7 @@
     - vscode
 
 - name: Show installed extensions
-  ansible.builtin.command: "code --list-extensions"
+  ansible.builtin.command: flatpak run com.visualstudio.code --list-extensions
   register: vscode_installed_extensions
   changed_when: false
   tags:

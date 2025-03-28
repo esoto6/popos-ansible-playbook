@@ -1,6 +1,6 @@
 ---
 - name: Check if Chrome is installed
-  ansible.builtin.command: flatpak list --app | grep com.google.Chrome
+  ansible.builtin.shell: "flatpak list --app | grep -q com.google.Chrome"
   register: chrome_installed
   changed_when: false
   ignore_errors: true

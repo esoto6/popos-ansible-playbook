@@ -29,7 +29,8 @@
     cmd: gh auth status
   register: gh_auth_check
   failed_when: false
-  changed_when: false
+  ignore_errors: true
+
 
 - name: Debug GitHub CLI authentication status (Raw Output)
   ansible.builtin.debug:
@@ -37,7 +38,7 @@
 
 - name: Set authentication check result
   ansible.builtin.set_fact:
-    github_authenticated: "{{ gh_auth_check.stdout is search('Logged in to github.com') }}"
+    github_authenticated: "{{ gh_auth_check.rc == 0 }}"
 
 - name: Prompt user to manually authenticate GitHub CLI
   ansible.builtin.debug:

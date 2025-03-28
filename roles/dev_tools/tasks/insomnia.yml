@@ -1,6 +1,14 @@
 ---
+- name: Check if Insomnia is installed
+  ansible.builtin.shell: "flatpak list --app | grep -q rest.insomnia.Insomnia"
+  register: insomnia_installed
+  changed_when: false
+  ignore_errors: true
+  tags:
+    - insomnia
+
 - name: Install Insomnia
   ansible.builtin.command: flatpak install --user --noninteractive rest.insomnia.Insomnia
-  when: install.insomnia
+  when: install.insomnia and insomnia_installed.rc != 0
   tags:
     - insomnia

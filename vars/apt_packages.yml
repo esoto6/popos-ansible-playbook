@@ -1,6 +1,4 @@
 ---
-apt_repositories:
-  - ppa:neovim-ppa/stable
 apt_packages:
   essentials:
     - git
@@ -12,6 +10,7 @@ apt_packages:
     - make
     - gcc
     - build-essential
+    - cargo
   utilities:
     - fzf
     - btop

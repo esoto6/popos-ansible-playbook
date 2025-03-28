@@ -1,6 +1,6 @@
 ---
 - name: Check if Obsidian is installed
-  ansible.builtin.command: flatpak list --app | grep md.obsidian.Obsidian
+  ansible.builtin.shell: "flatpak list --app | grep -q md.obsidian.Obsidian"
   register: obsidian_installed
   changed_when: false
   ignore_errors: true

@@ -6,11 +6,20 @@
     state: directory
     mode: "0755"
 
+- name: Check if JetBrainsMono Nerd Font is already installed
+  ansible.builtin.command:
+    cmd: fc-list | grep -q "JetBrainsMono Nerd Font"
+  register: font_installed
+  changed_when: false
+  ignore_errors: true
+  become: true
+
 - name: Download and Install JetBrainsMono Nerd Font
   become: true
   ansible.builtin.get_url:
     url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/JetBrainsMono.tar.xz"
     dest: "/tmp/JetBrainsMono.zip"
+  when: font_installed.rc != 0
 
 - name: Extract Nerd Font
   become: true
@@ -20,14 +29,17 @@
     remote_src: true
     extra_opts:
       - "--strip-components=1"
+  when: font_installed.rc != 0
 
 - name: Refresh Font Cache
   become: true
   ansible.builtin.command: fc-cache -fv
   register: font_cache
   changed_when: "'Rebuilding font cache' in font_cache.stdout"
+  when: font_installed.rc != 0
 
 - name: Set system-wide font
   ansible.builtin.command:
     cmd: gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font'
   become: true
+  when: font_installed.rc != 0

@@ -1,7 +1,7 @@
 ---
-- name: Load apt package variables
+- name: Load starship vars
   ansible.builtin.include_vars:
-    file: vars/starship_config.yml
+    file: vars/starship_vars.yml
 
 - name: Install Github CLI
   ansible.builtin.import_tasks: tasks/github.yml
@@ -50,12 +50,6 @@
   when: install.starship
   tags:
     - starship
-
-- name: Install eza
-  ansible.builtin.import_tasks: tasks/eza.yml
-  when: install.eza
-  tags:
-    - eza
 
 - name: Install intellij
   ansible.builtin.import_tasks: tasks/intellij.yml
