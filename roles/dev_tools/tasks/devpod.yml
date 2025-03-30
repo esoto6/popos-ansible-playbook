@@ -1,0 +1,10 @@
+- name: Download DevPod AppImage
+  get_url:
+    url: "https://github.com/loft-sh/devpod/releases/latest/download/DevPod_linux_amd64.AppImage"
+    dest: "~/Downloads"
+    mode: '0755'
+
+- name: Verify DevPod AppImage is executable
+  file:
+    path: "~/Downloads/DevPod_linux_amd64.AppImage"
+    mode: '0755'
