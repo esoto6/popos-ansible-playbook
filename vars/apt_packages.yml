@@ -18,3 +18,4 @@ apt_packages:
     - plocate
     - ripgrep
     - neofetch
+    - bind9-utils
