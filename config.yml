@@ -28,3 +28,4 @@ install:
   starship: false
   intellij: false
   devpod: true
+  terraform: true

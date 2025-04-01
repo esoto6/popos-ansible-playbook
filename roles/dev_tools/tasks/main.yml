@@ -62,3 +62,7 @@
   when: install.devpod 
   tags:
     - devpod
+
+- name: Install Terraform
+  ansible.builtin.import_tasks: tasks/terraform.yml
+  when: install.terraform

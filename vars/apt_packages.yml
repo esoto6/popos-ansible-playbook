@@ -14,7 +14,6 @@ apt_packages:
   utilities:
     - fzf
     - btop
-    - build-essential
     - plocate
     - ripgrep
     - neofetch
