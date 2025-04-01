@@ -95,16 +95,18 @@ ansible-playbook main.yml --tags programming_languages --skip-tags java
 │   │       └── main.yml
 │   ├── dev_tools               # Tags: ['dev_tools']
 │   │   └── tasks
+|   |       ├── devpod.yml          # Tags: ['devpod'] 
 │   │       ├── docker.yml          # Tags: ['docker']
-│   │       ├── eza.yml             # Tags: ['eza']
 │   │       ├── github.yml          # Tags: ['github']
 │   │       ├── insomnia.yml        # Tags: ['insomnia']
 │   │       ├── intellij.yml        # Tags: ['intellij']
+│   │       ├── kubectl.yml         # Tags: ['kubectl']
 │   │       ├── lazydocker.yml      # Tags: ['lazydocker']
 │   │       ├── main.yml            
 │   │       ├── neovim.yml          # Tags: ['neovim']
 │   │       ├── obsidian.yml        # Tags: ['obsidian']
 │   │       ├── starship.yml        # Tags: ['starship']
+│   │       ├── terraform.yml       # Tags: ['terraform']
 │   │       └── vscode.yml          # Tags: ['vscode']
 │   └── programming_languages   # Tags: ['programming_languages']
 │       └── tasks
