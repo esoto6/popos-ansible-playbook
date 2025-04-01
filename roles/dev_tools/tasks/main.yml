@@ -66,3 +66,7 @@
 - name: Install Terraform
   ansible.builtin.import_tasks: tasks/terraform.yml
   when: install.terraform
+
+- name: Install Kubectl
+  ansible.builtin.import_tasks: tasks/kubectl.yml
+  when: install.kubectl 

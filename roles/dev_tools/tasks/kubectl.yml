@@ -1,0 +1,56 @@
+---
+
+- name: Get latest stable kubectl version
+  ansible.builtin.shell: "curl -L -s https://dl.k8s.io/release/stable.txt"
+  register: kubectl_version
+  changed_when: false
+  tags:
+    - kubectl
+
+- name: Download kubectl binary
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    mode: "0755"
+  become: true
+  tags:
+    - kubectl
+
+- name: Download kubectl checksum file
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl.sha256"
+    dest: "/tmp/kubectl.sha256"
+    mode: "0644"
+  become: true
+  tags:
+    - kubectl
+
+- name: Validate kubectl checksum
+  ansible.builtin.shell: "echo \"$(cat /usr/local/bin/kubectl/kubectl.sha256)  kubectl\" | sha256sum --check"
+  register: checksum_result
+  changed_when: false
+  failed_when: checksum_result.rc != 0
+  tags:
+    -kubectl 
+
+- name: Install kubectl to /usr/local/bin using install command
+  ansible.builtin.command:
+    cmd: "install -o root -g root -m 0755 /usr/local/bin/kubectl /usr/local/bin/kubectl"
+    creates: /usr/local/bin/kubectl
+  become: false
+  tags:
+    - kubectl
+
+- name: Verify kubectl installation
+  ansible.builtin.command: kubectl version --client --output=yaml
+  register: kubectl_check
+  changed_when: false
+  ignore_errors: true
+  tags:
+    - kubectl
+
+- name: Print kubectl version
+  ansible.builtin.debug:
+    msg: "{{ kubectl_check.stdout_lines }}"
+  tags:
+    - kubectl

@@ -29,3 +29,4 @@ install:
   intellij: false
   devpod: true
   terraform: true
+  kubectl: true
