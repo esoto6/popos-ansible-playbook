@@ -1,10 +1,74 @@
+---
+- name: Ensure Devpod directory exists in /opt
+  ansible.builtin.file:
+    path: /opt/devpod
+    state: directory
+    mode: "0755"
+  become: true
+  tags:
+    - devpod
+
+
 - name: Download DevPod AppImage
   get_url:
     url: "https://github.com/loft-sh/devpod/releases/latest/download/DevPod_linux_amd64.AppImage"
-    dest: "~/Downloads"
+    dest: "/opt/devpod/devpod"
     mode: '0755'
+  become: true
+  tags: 
+    - devpod
 
-- name: Verify DevPod AppImage is executable
+- name: Create a symbolic link to /usr/local/bin
+  ansible.builtin.file:
+    src: "/opt/devpod/devpod"
+    dest: "/usr/local/bin/devpod"
+    state: link
+  become: false
+  tags:
+    - devpod
+
+- name: Ensure local icons directory exists for the user
   file:
-    path: "~/Downloads/DevPod_linux_amd64.AppImage"
+    path: "~/.local/share/icons"
+    state: directory
     mode: '0755'
+  become: false
+
+- name: Download DevPod icon
+  get_url:
+    url: "https://devpod.sh/docs/media/devpod-logo.png"
+    dest: "~/.local/share/icons/devpod.png"
+    mode: '0644'
+  become: false
+
+- name: Create DevPod desktop entry
+  copy:
+    dest: "~/.local/share/applications/devpod.desktop"
+    content: |
+        [Desktop Entry]
+        Name=DevPod
+        Comment=Run DevPod
+        Exec=/opt/devpod/devpod
+        Icon=~/.local/share/icons/devpod.png
+        Terminal=false
+        Type=Application
+        Categories=Development;
+  become: false
+  tags:
+    - devpod
+
+- name: Set permissions for the .desktop file
+  file:
+    path: "~/.local/share/applications/devpod.desktop"
+    mode: '0644'
+
+- name: Refresh desktop database
+  command: update-desktop-database ~/.local/share/applications/
+  changed_when: false
+  become: false
+  tags:
+    - devpod
+# - name: Verify DevPod AppImage is executable
+#   file:
+#     path: "/DevPod_linux_amd64.AppImage"
+#     mode: '0755'
