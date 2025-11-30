@@ -9,24 +9,24 @@ vars_files:
   - vars/starship_vars.yml
 
 install:
-  apt_packages: false
-  vscode: false
-  bitwarden: false
-  obsidian: false
-  neovim: false
-  docker: false
-  insomnia: false
-  aliases: false
-  github: false
-  chrome: false
-  lazydocker: false
-  python: false
-  java: false
-  npm: false
-  go: false
-  fonts: false
-  starship: false
-  intellij: false
+  apt_packages: true
+  vscode: true
+  bitwarden: true
+  obsidian: true
+  neovim: true
+  docker: true
+  insomnia: true
+  aliases: true
+  github: true
+  chrome: true
+  lazydocker: true
+  python: true
+  java: true
+  npm: true
+  go: true
+  fonts: true
+  starship: true
+  intellij: true
   devpod: true
   terraform: true
   kubectl: true
