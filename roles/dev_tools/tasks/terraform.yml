@@ -1,34 +1,38 @@
----
-- name: Download Hashicorp GPG key
-  ansible.builtin.get_url:
-    url: https://apt.releases.hashicorp.com/gpg
-    dest: /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    mode: "0644"
-  become: true
-  tags:
-    - terraform
-
-- name: Add Hashicorp repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com jammy main"
-    filename: hashicorp
+- name: Ensure required packages are installed
+  apt:
+    name: [wget, gnupg, software-properties-common]
     state: present
-  tags:
-    - terraform
-
-- name: Update APT cache
   become: true
+
+- name: Download and dearmor HashiCorp GPG key
+  become: true
+  shell: |
+    wget -qO- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null
+  args:
+    creates: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+- name: Set APT architecture
+  set_fact:
+    apt_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+
+- name: Debug HashiCorp APT repo string
+  debug:
+    msg: "deb [arch={{ apt_arch}} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+
+- name: Add HashiCorp APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{apt_arch }} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_lsb.codename }} main"
+    state: present
+    filename: hashicorp
+  become: true
+
+- name: Update apt cache
   ansible.builtin.apt:
-    update_cache: true
-  tags:
-    - terraform
-
-- name: Install terraform
+    update_cache: yes
   become: true
+
+- name: Install Terraform
   ansible.builtin.apt:
     name: terraform
     state: present
-  tags:
-    - terraform
-
+  become: true

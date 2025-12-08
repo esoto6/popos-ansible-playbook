@@ -66,7 +66,20 @@
 - name: Install Terraform
   ansible.builtin.import_tasks: tasks/terraform.yml
   when: install.terraform
+  tags:
+    - terraform
 
 - name: Install Kubectl
   ansible.builtin.import_tasks: tasks/kubectl.yml
   when: install.kubectl 
+  tags:
+    - kubectl
+
+- name: Install Gitleaks
+  ansible.builtin.import_tasks: tasks/gitleaks.yml
+  when: install.gitleaks
+  vars:
+    - gitleaks_version: "8.30.0"
+    - projects_dir: "/home/edwin/Projects"
+  tags: 
+    - gitleaks

@@ -1,0 +1,163 @@
+- name: Set Gitleaks version and download URL
+  set_fact:
+    gitleaks_url: "https://github.com/gitleaks/gitleaks/releases/download/v{{ gitleaks_version }}/gitleaks_{{ gitleaks_version }}_linux_x64.tar.gz"
+  tags:
+    - gitleaks
+
+- name: Install dependencies for Gitleaks
+  apt:
+    name:
+      - curl
+      - tar
+    state: present
+    update_cache: yes
+  become: true
+  tags:
+    - gitleaks
+
+- name: Download Gitleaks tarball
+  get_url:
+    url: "{{ gitleaks_url }}"
+    dest: "/tmp/gitleaks.tar.gz"
+    mode: "0644"
+  become: true
+  tags:
+    - gitleaks
+
+- name: Extract Gitleaks binary
+  command: tar -xzf /tmp/gitleaks.tar.gz -C /tmp
+  args:
+    creates: /tmp/gitleaks
+  become: true
+  tags:
+    - gitleaks
+
+- name: Ensure Gitleaks binary exists before moving
+  stat:
+    path: /tmp/gitleaks
+  register: gitleaks_binary
+  tags:
+    - gitleaks
+
+- name: Move Gitleaks binary to /usr/local/bin
+  command: mv /tmp/gitleaks /usr/local/bin/gitleaks
+  when: gitleaks_binary.stat.exists
+  become: true
+  tags:
+    - gitleaks
+
+- name: Ensure Gitleaks is executable
+  file:
+    path: /usr/local/bin/gitleaks
+    mode: "0755"
+  become: true
+  tags:
+    - gitleaks
+
+- name: Cleanup Gitleaks temporary files
+  file:
+    path: "/tmp/gitleaks*"
+    state: absent
+  become: true
+  tags:
+    - gitleaks
+
+- name: Verify Gitleaks installation
+  command: /usr/local/bin/gitleaks --version
+  register: gitleaks_version_check
+  changed_when: false
+  tags:
+    - gitleaks
+
+- name: Ensure Python3 pip is installed
+  apt:
+    name: python3-pip
+    state: present
+  become: true
+  tags:
+    - gitleaks
+
+- name: Install pre-commit globally
+  pip:
+    name: pre-commit
+    executable: pip3
+  become: true
+  tags:
+    - gitleaks
+
+- name: Find all .git directories in Projects
+  find:
+    paths: "{{ projects_dir }}"
+    file_type: directory
+    recurse: yes
+    hidden: yes
+    depth: 2
+    patterns: ".git"
+  register: git_dirs
+  tags:
+    - gitleaks
+
+- name: Extract Git repo root paths
+  set_fact:
+    git_repo_paths: "{{ git_dirs.files | map(attribute='path') | map('regex_replace', '/\\.git$', '') | list }}"
+  tags:
+    - gitleaks
+
+- name: Debug Git repo paths
+  debug:
+    var: git_repo_paths
+  tags:
+    - gitleaks
+
+- name: Create pre-commit config for Gitleaks
+  copy:
+    dest: "{{ item }}/.pre-commit-config.yaml"
+    content: |
+      repos:
+        - repo: https://github.com/gitleaks/gitleaks
+          rev: "v{{ gitleaks_version }}"
+          hooks:
+            - id: gitleaks
+  loop: "{{ git_repo_paths }}"
+  tags:
+    - gitleaks
+
+- name: Install pre-commit hooks in repos
+  command: pre-commit install
+  args:
+    chdir: "{{ item }}"
+  loop: "{{ git_repo_paths }}"
+  tags:
+    - gitleaks
+
+- name: Run pre-commit hooks once
+  command: pre-commit run --all-files
+  args:
+    chdir: "{{ item }}"
+  loop: "{{ git_repo_paths }}"
+  ignore_errors: true
+  tags:
+    - gitleaks
+
+- name: Ensure global Git template directory exists
+  file:
+    path: "{{ ansible_env.HOME }}/.git-templates/hooks"
+    state: directory
+    mode: "0755"
+  tags:
+    - gitleaks
+
+- name: Add global pre-commit hook for new repos
+  copy:
+    dest: "{{ ansible_env.HOME }}/.git-templates/hooks/pre-commit"
+    content: |
+      #!/bin/bash
+      /usr/local/bin/gitleaks detect --staged
+    mode: "0755"
+  tags:
+    - gitleaks
+
+- name: Configure Git to use global template (for new repos)
+  command: git config --global init.templateDir "{{ ansible_env.HOME }}/.git-templates"
+  tags:
+    - gitleaks
