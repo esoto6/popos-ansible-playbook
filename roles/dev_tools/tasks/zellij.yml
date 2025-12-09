@@ -1,0 +1,7 @@
+- name: Install Zellij
+  ansible.builtin.unarchive:
+    src: "https://github.com/zellij-org/zellij/releases/download/v{{ zellij_version }}/zellij-x86_64-unknown-linux-musl.tar.gz"
+    dest: /usr/local/bin/
+    remote_src: true
+    creates: "/usr/local/bin/zellij"
+  become: true

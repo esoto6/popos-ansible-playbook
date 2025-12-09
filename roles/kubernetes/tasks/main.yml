@@ -8,23 +8,31 @@
 - name: Install kustomize
   ansible.builtin.import_tasks: tasks/kustomize.yml
   when: install.kustomize 
+  vars:
+    - kustomize_version: '5.8.0'
   tags:
     - kustomize
 
 - name: Install talosctl
   ansible.builtin.import_tasks: tasks/talosctl.yml
   when: install.talosctl 
+  vars:
+    - talosctl_version: '1.10.8'
   tags:
     - talosctl
 
 - name: Install argocd cli
   ansible.builtin.import_tasks: tasks/argocd_cli.yml
   when: install.argocd_cli 
+  vars:
+    - argocd_cli_version: '3.2.1'
   tags:
     - argocd_cli
 
 - name: Install k9s
   ansible.builtin.import_tasks: tasks/k9s.yml
   when: install.k9s 
+  vars:
+    - k9s_version: '0.50.16'
   tags:
     - k9s

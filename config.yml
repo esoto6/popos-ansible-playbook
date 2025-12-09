@@ -30,7 +30,8 @@ install:
   devpod: false
   terraform: false
   gitleaks: false
-  kubectl: true
+  zellij: true
+  kubectl: false
   kustomize: true
   talosctl: true
   k9s: true

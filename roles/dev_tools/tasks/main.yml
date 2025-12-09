@@ -77,3 +77,11 @@
     - projects_dir: "/home/edwin/Projects"
   tags: 
     - gitleaks
+
+- name: Install Zellij
+  ansible.builtin.import_tasks: tasks/zellij.yml
+  when: install.zellij
+  vars:
+    - zellij_version: '0.43.1'
+  tags:
+    - zellij
