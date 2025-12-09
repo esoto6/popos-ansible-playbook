@@ -29,5 +29,9 @@ install:
   intellij: false
   devpod: false
   terraform: false
-  kubectl: false
-  gitleaks: true
+  gitleaks: false
+  kubectl: true
+  kustomize: true
+  talosctl: true
+  k9s: true
+  argocd_cli: true

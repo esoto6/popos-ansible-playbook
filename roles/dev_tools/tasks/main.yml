@@ -69,12 +69,6 @@
   tags:
     - terraform
 
-- name: Install Kubectl
-  ansible.builtin.import_tasks: tasks/kubectl.yml
-  when: install.kubectl 
-  tags:
-    - kubectl
-
 - name: Install Gitleaks
   ansible.builtin.import_tasks: tasks/gitleaks.yml
   when: install.gitleaks

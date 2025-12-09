@@ -33,3 +33,7 @@
         - vars/starship_vars.yml
       tags:
         - dev_tools
+
+    - role: kubernetes
+      tags:
+        - kubernetes

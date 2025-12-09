@@ -1,0 +1,30 @@
+---
+- name: Install Kubectl
+  ansible.builtin.import_tasks: tasks/kubectl.yml
+  when: install.kubectl 
+  tags:
+    - kubectl
+
+- name: Install kustomize
+  ansible.builtin.import_tasks: tasks/kustomize.yml
+  when: install.kustomize 
+  tags:
+    - kustomize
+
+- name: Install talosctl
+  ansible.builtin.import_tasks: tasks/talosctl.yml
+  when: install.talosctl 
+  tags:
+    - talosctl
+
+- name: Install argocd cli
+  ansible.builtin.import_tasks: tasks/argocd_cli.yml
+  when: install.argocd_cli 
+  tags:
+    - argocd_cli
+
+- name: Install k9s
+  ansible.builtin.import_tasks: tasks/k9s.yml
+  when: install.k9s 
+  tags:
+    - k9s
