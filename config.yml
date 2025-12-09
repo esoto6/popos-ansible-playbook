@@ -9,7 +9,8 @@ vars_files:
   - vars/starship_vars.yml
 
 install:
-  apt_packages: false
+  apt_packages: true
+  fastfetch:  true
   vscode: false
   bitwarden: false
   obsidian: false
@@ -30,9 +31,9 @@ install:
   devpod: false
   terraform: false
   gitleaks: false
-  zellij: true
+  zellij: false
   kubectl: false
-  kustomize: true
-  talosctl: true
-  k9s: true
-  argocd_cli: true
+  kustomize: false
+  talosctl: false
+  k9s: false
+  argocd_cli: false

@@ -16,5 +16,7 @@ apt_packages:
     - btop
     - plocate
     - ripgrep
-    - neofetch
-    - bind9-utils
+    - bind9-dnsutils
+    - tree
+    - zoxide
+

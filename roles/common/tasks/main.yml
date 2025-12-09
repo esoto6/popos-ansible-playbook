@@ -14,6 +14,14 @@
     - common
     - apt
 
+- name: Fastfetch
+  ansible.builtin.import_tasks: tasks/fastfetch.yml
+  when: install.fastfetch
+  vars:
+    - fastfetch_version: '2.56.0'
+  tags: 
+    - fastfetch
+
 - name: Configure Aliases
   ansible.builtin.import_tasks: tasks/aliases.yml
   when: install.aliases

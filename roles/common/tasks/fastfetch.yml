@@ -1,0 +1,16 @@
+- name: Add Fastfetch PPA
+  ansible.builtin.apt_repository:
+    repo: ppa:zhangsongcui3371/fastfetch
+    state: present
+    update_cache: yes
+  become: true
+  tags: 
+    - fastfetch
+
+- name: Install Fastfetch
+  ansible.builtin.apt:
+    name: fastfetch
+    state: latest
+  become: true
+  tags:
+    - fastfetch
